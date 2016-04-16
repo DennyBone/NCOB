@@ -2,5 +2,4 @@
 First web page
 
 Authors:
-Dennis Moore
-Michael Knight
+Dennis Moore and Michael Knight
