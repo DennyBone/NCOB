@@ -1,7 +1,8 @@
 # WebMD
 First web page
 
-Authors:
+<b Authors: />
+<br />
 Dennis Moore
 <br />
 Michael Knight
@@ -23,7 +24,7 @@ Github pages for hosting static webpages:
 https://pages.github.com/
 <br />
 
-<b> Topics to learn: <b>
+<b> Topics to learn: </b>
 <br />
 Node.js - server side code in javascript
 <br />
