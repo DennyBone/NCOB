@@ -1,7 +1,7 @@
 # WebMD
 First web page
 
-<b Authors: />
+<b> Authors: </b>
 <br />
 Dennis Moore
 <br />
