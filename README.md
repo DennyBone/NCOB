@@ -21,3 +21,11 @@ To compile zmq programs, you must link with -lzmq (i.e. gcc hwserver.c -o hwserv
 Follow instructions here - https://developers.google.com/protocol-buffers/
 <br />
 
+<b> To Do: </b>
+<br />
+file/picture sharer
+<br />
+twitter interface
+<br />
+EPL rest api's
+
