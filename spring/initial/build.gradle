@@ -27,6 +27,7 @@ targetCompatibility = 1.8
 dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-devtools")
+    compile("com.google.protobuf:protobuf-java:3.4.0")
     testCompile("junit:junit")
 }
 
