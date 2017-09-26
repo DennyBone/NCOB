@@ -1,2 +1,2 @@
-[NCOB Wiki] - https://github.com/DennyBone/NCOB.wiki.git
+[NCOB Wiki] - https://github.com/DennyBone/NCOB/wiki
 
