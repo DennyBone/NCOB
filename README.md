@@ -1,31 +1,32 @@
 # WebMD
-This repo is the beginning of a platform for integrating web pages with embedded control systems.
+This repo is the beginning of a platform for integrating a Spring server with embedded control systems.
 
-<b> Authors: </b>
-<br />
+Authors:
 Dennis Moore
-<br />
+Alan Achtenberg
 
-<b> ZeroMQ Setup: </b>
-<br />
+ZeroMQ Setup: 
+
 Installation instructions (clone git repo to /usr/local/) - http://zeromq.org/intro:get-the-software
-<br />
+
 ZeroMQ Guide - http://zguide.zeromq.org/page:all
-<br />
+
 High Level C Binding - http://czmq.zeromq.org/
-<br />
+
 To compile zmq programs, you must link with -lzmq (i.e. gcc hwserver.c -o hwserver -lzmq)
 
-<b> Protobuf Setup: </b>
-<br />
+Protobuf Setup:
 Follow instructions here - https://developers.google.com/protocol-buffers/
-<br />
 
-<b> To Do: </b>
-<br />
+To Do:
+protobuf code
+zeromq client and server
+database
+spring server
+simple control system on Pi
+
+Other:
 file/picture sharer
-<br />
 twitter interface
-<br />
 EPL rest api's
 
