@@ -1,11 +1,11 @@
 syntax = "proto3";
 package proto;
 
-option java_package = "src.main.java.proto";
-option java_outer_classname = "MotionCommand";
+option java_package = "proto";
+option java_outer_classname = "MotionCommandProto";
 
 message Command
 {
-	optional double throttle = 1;
-	optional double servo = 2;
+	double throttle = 1;
+	double servo = 2;
 }
