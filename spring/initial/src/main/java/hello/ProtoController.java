@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import proto.ProtoMessage;
+
 @Controller
 public class ProtoController
 {
@@ -25,8 +27,10 @@ public class ProtoController
     	// Using the given data, use protobuf to write to the addresses.dat file
     	// After that, consider writing this data to a DB instead
     	
-    	System.out.println(protoMessage.getFirstName());
-    	System.out.println(protoMessage.getLastName());
+    	System.out.println(protoMessage.getThrottle());
+    	System.out.println(protoMessage.getServo());
+    	
+    	
     	
     	return "proto";
     }

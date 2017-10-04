@@ -7,8 +7,8 @@
 <body>
 	<h1>Form</h1>
     <form action="#" th:action="@{/proto}" th:object="${protoMessage}" method="post">
-    	<p>First Name: <input type="text" th:field="*{firstName}" /></p>
-        <p>Last Name: <input type="text" th:field="*{lastName}" /></p>
+    	<p>Throttle: <input type="text" th:field="*{throttle}" /></p>
+        <p>Servo: <input type="text" th:field="*{servo}" /></p>
         <p><input type="submit" value="Submit" /></p>
     </form>
 </body>
