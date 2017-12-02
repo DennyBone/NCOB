@@ -1,45 +1,46 @@
-package server.mq;
+package com.webmd.server.mq;
 
-import common.mq.MqComponent;
-import common.util.cli.NetworkingCli;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.webmd.common.mq.MqComponent;
+import lombok.extern.slf4j.Slf4j;
+import org.zeromq.ZContext;
 import org.zeromq.ZFrame;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
-public class MqRepSocket extends MqComponent {
-    private static final Logger logger = LoggerFactory.getLogger(MqRepSocket.class);
+import java.util.concurrent.ExecutorService;
 
-    public MqRepSocket(NetworkingCli networkingCli) {
-        super(networkingCli);
+@Slf4j
+public class MqRepSocket extends MqComponent {
+
+    protected MqRepSocket(String host, String port, ExecutorService executor, ZContext context) {
+        super(host, port, executor, context);
     }
 
     @Override
     public void run() {
-        final String address = getBindingAddress();
+        final String address = getAddress();
         try {
             ZMQ.Socket serverSocket = context.createSocket(ZMQ.REP);
 
             serverSocket.bind(address);
-            logger.info("Mq server port bound to {}", address);
+            log.info("Mq server port bound to {}", address);
 
             while (true) {
                 ZMsg request = ZMsg.recvMsg(serverSocket);
                 if (request == null) {
-                    logger.error("interrupted");
+                    log.error("interrupted");
                     break;
                 }
-                logger.info("Received Request Msg ");
+                log.info("Received Request Msg ");
                 for (ZFrame frame : request) {
-                    logger.info("Frame: {}", frame.toString());
+                    log.info("Frame: {}", frame.toString());
                 }
                 ZMsg response = new ZMsg();
                 response.add("Hello from the other side");
                 response.send(serverSocket);
             }
         } catch (Exception e) {
-            logger.error("mq component failed", e);
+            log.error("mq component failed", e);
         } finally {
             context.close();
         }

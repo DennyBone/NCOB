@@ -1,44 +1,48 @@
-package server.mq;
+package com.webmd.server.mq;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import common.mq.MqComponent;
-import common.util.cli.NetworkingCli;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.webmd.common.mq.MqComponent;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jmx.export.annotation.ManagedOperation;
 import org.springframework.jmx.export.annotation.ManagedResource;
+import org.springframework.stereotype.Component;
+import org.zeromq.ZContext;
 import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.concurrent.ExecutorService;
 
 @ManagedResource
+@Component
+@Slf4j
 public class MqRouter extends MqComponent {
-    private static final Logger logger = LoggerFactory.getLogger(MqRouter.class);
-    private final BiMap<byte[], String> connectionIdToClientId = HashBiMap.create();
+    private final Map<String, byte[]> connectionIdToClientId = new HashMap<>();
     private ZMQ.Socket routerSocket;
 
-
-    public MqRouter(NetworkingCli networkingCli) {
-        super(networkingCli);
+    @Autowired
+    public MqRouter(@Value("${mq.router.host}") String host, @Value("${mq.router.port}") String port, ExecutorService executor, ZContext context) {
+        super(host, port, executor, context);
     }
 
     @Override
     public void run() {
-        final String address = getBindingAddress();
+        final String address = getAddress();
         try {
             routerSocket = context.createSocket(ZMQ.ROUTER);
             routerSocket.bind(address);
             routerSocket.setRouterMandatory(true);//let us know if connection id does not exist
-            logger.info("Mq router port bound to {}", address);
+            log.info("Mq router port bound to {}", address);
             while (true) {
                 ZMsg request = ZMsg.recvMsg(routerSocket);
                 if (request == null) {
-                    logger.error("interrupted");
+                    log.error("interrupted");
                     break;
                 }
-                logger.debug("Received Msg {}", request);
+                log.debug("Received Msg {}", request);
 
                 //router pre-pends unique id in form of 5 bytes for client connections
                 byte[] connectionId = request.poll().getData();//IMPORTANT router expects key in 5 bytes when sending, do NOT read key as string
@@ -49,11 +53,11 @@ public class MqRouter extends MqComponent {
                 } else {
                     clientId = nullFrame;
                 }
-                connectionIdToClientId.put(connectionId, clientId);
+                connectionIdToClientId.put(clientId, connectionId);
                 sendMessage("Hello from the other side", clientId);
             }
         } catch (Exception e) {
-            logger.error("mq component failed", e);
+            log.error("mq component failed", e);
         } finally {
             context.close();
         }
@@ -61,23 +65,23 @@ public class MqRouter extends MqComponent {
 
     @ManagedOperation
     public HashSet<String> getConnectedClientIds() {
-        return new HashSet<>(connectionIdToClientId.values());
+        return new HashSet<>(connectionIdToClientId.keySet());
     }
 
     @ManagedOperation
     public void sendMessage(String message, String clientId) {
-        byte[] connectionId = connectionIdToClientId.inverse().get(clientId);
+        byte[] connectionId = connectionIdToClientId.get(clientId);
         if (connectionId == null) {
             throw new IllegalArgumentException("No client connection for client " + clientId);
         }
-        logger.debug("Sending message: {}", message);
+        log.debug("Sending message: {}", message);
         ZMsg zMsg = new ZMsg();
         zMsg.add(connectionId);
         zMsg.add("");//add null frame for REQ socket as required, assume implementation of a DEALER socket is smart enough to check for it.
         zMsg.add(message);
         boolean success = zMsg.send(routerSocket);//strips connection id from first frame and routes message accordingly
         if (!success) {
-            logger.error("Send to client {} unsuccessful", connectionId);
+            log.error("Send to client {} unsuccessful", connectionId);
         }
     }
 
