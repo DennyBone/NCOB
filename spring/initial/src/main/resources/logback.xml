@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{5} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="MAIN_LOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>log/main.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d{yyyy-MM-dd_HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</Pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.FixedWindowRollingPolicy">
+            <FileNamePattern>log/main.%i.log</FileNamePattern>
+            <MinIndex>1</MinIndex>
+            <MaxIndex>5</MaxIndex>
+        </rollingPolicy>
+        <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
+            <MaxFileSize>10MB</MaxFileSize>
+        </triggeringPolicy>
+    </appender>
+
+    <!--example of how to configure logger for specific class-->
+    <!--additivity default is true when disabled the log event will not be passed up the logging hierarchy,
+    when set to false the logger will only log to appenders listed inside the logger definition-->
+    <logger name="com.webmd.server.mq.MqRouter" level="DEBUG" additivity="true">
+        <!--appenders can be added to loggers like comment bellow-->
+        <!--<appender-ref ref="OTHER_APPENDER"/>-->
+    </logger>
+
+
+    <!--example of how to configure a logger for a specific package-->
+    <logger name="com.webmd.server" level="INFO"/>
+
+    <!--root is a simple logger definition where it is the always the last logger to receive the logging event unless additivity is not enabled-->
+    <!--You can also think of it as a logger where the name is an empty string-->
+    <!--The level for a specific log statement is set by the closest matching logger definition.-->
+    <!--As of this commit please do not read example comments after changes have been made, the class logger com.webmd.server.mq.MqRouter will log any statements of DEBUG
+    or lower while the class com.webmd.server.mq.MqRepSocket will log at INFO level and lastly the class logger com.webmd.Application will log at ERROR level-->
+    <!--Unlike level attribute the appender refs are inherited from parent loggers unless additivity is set to false, so in this example all classes will log to CONSOLE and MAIN_LOG-->
+    <root level="ERROR">
+        <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="MAIN_LOG"/>
+    </root>
+
+</configuration>
