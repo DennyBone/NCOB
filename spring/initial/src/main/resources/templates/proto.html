@@ -1,0 +1,15 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Google Protobuf Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+</head>
+<body>
+	<h1>Form</h1>
+    <form action="#" th:action="@{/proto}" th:object="${protoMessage}" method="post">
+    	<p>Throttle: <input type="text" th:field="*{throttle}" /></p>
+        <p>Servo: <input type="text" th:field="*{servo}" /></p>
+        <p><input type="submit" value="Submit" /></p>
+    </form>
+</body>
+</html>

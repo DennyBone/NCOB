@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+
+<script type="text/javascript">
+	function sup()
+	{
+		//window.print();
+		var z = document.getElementById("supID");
+		z.textContent="sup";
+	}
+</script>
+
+    <head>
+        <title>Hello jQuery</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+        <script src="/js/com.webmd.hello.js"/>
+    </head>
+
+    <body>    
+		<input type="button" value="myButton" onclick="sup()"/>
+		<p id="supID"></p>
+        <div>
+            <p class="greeting-id">The ID is </p>
+            <p class="greeting-content">The content is </p>
+        </div>
+    </body>
+</html>

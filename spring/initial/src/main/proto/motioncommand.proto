@@ -1,0 +1,11 @@
+syntax = "proto3";
+package proto;
+
+option java_package = "com.webmd.proto";
+option java_outer_classname = "MotionCommandProto";
+
+message Command
+{
+	double throttle = 1;
+	double servo = 2;
+}
