@@ -22,7 +22,9 @@ public class Application {
 
     @Bean
     public ThreadPoolExecutorFactoryBean getExecutorService() {
-        return new ThreadPoolExecutorFactoryBean();
+        ThreadPoolExecutorFactoryBean threadPoolExecutorFactoryBean = new ThreadPoolExecutorFactoryBean();
+        threadPoolExecutorFactoryBean.setCorePoolSize(4);
+        return threadPoolExecutorFactoryBean;
     }
 
     @Bean

@@ -5,8 +5,8 @@ import org.apache.commons.cli.*;
 
 @Slf4j
 public class NetworkingCli {
-    private static final String DEFAULT_HOST = "localhost";
-    private static final String DEFAULT_PORT = "61616";
+    private static final String DEFAULT_HOST = "*"; //localhost
+    private static final String DEFAULT_PORT = "61615"; //61616
 
     private CommandLine commandLine;
     private final String prefix;
