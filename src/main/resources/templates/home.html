@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+	<head>
+	  <title>NCOB Home</title>
+	  <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" />
+	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	</head>
+	<body>
+
+        <div class="container">
+            <div class="nav">
+                <ul>
+                    <li><a th:href="@{/login}"> Login </a></li>
+                    <li><a th:href="@{/register}"> Register </a></li>
+                </ul>
+            </div>
+            <div class="main">
+                <h1>NCOB Home</h1>
+                <h3>Authors</h3>
+                <p>Dennis Moore and Alan Achtenberg</p>
+                <p>Code is available <a href="https://github.com/DennyBone/NCOB">here</a> </p>
+                <p> NCOB </p>
+                <img th:src="@{/content/ncob.jpg}" />
+            </div>
+        </div>
+
+	</body>
+</html>

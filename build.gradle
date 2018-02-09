@@ -15,7 +15,7 @@ apply plugin: 'com.google.protobuf'
 apply plugin: 'org.springframework.boot'
 
 jar {
-    baseName = 'gs-serving-web-content'
+    baseName = 'ncob'
     version = '0.1.0'
 }
 
@@ -47,9 +47,13 @@ dependencies {
     compile("com.google.protobuf:protobuf-java:3.4.0")
     compile("commons-cli:commons-cli:1.4")
     compile("org.slf4j:slf4j-api")
-    compile("org.springframework.boot:spring-boot-devtools")
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    compile("org.springframework.boot:spring-boot-devtools:1.5.9.RELEASE")
+    compile("org.springframework.boot:spring-boot-starter-thymeleaf:1.5.9.RELEASE")
     compile("org.zeromq:jeromq:0.4.2")
+    compile("org.springframework.boot:spring-boot-starter-security:1.5.7.RELEASE") //adds controllers/pass to app; need to configure
+    compile("org.springframework.boot:spring-boot-starter-data-mongodb:1.5.2.RELEASE")
+    compile("org.webjars:jquery:3.2.1")
+    compile("org.webjars:jquery-validation:1.17.0")
     compile group: 'org.projectlombok', name: 'lombok', version: '1.16.18'
 
     testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: junit_version
