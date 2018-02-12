@@ -31,7 +31,7 @@ public class RegisterController
     }
 
     @PostMapping("/register")
-    public String registerSubmit(@ModelAttribute(name = "user") @Valid User user, BindingResult bindingResult)
+    public String registerSubmit(@ModelAttribute(name = "user") @Valid User user, BindingResult bindingResult, Model model)
     {
         if (bindingResult.hasErrors())
         {
@@ -47,7 +47,7 @@ public class RegisterController
 
                 // success
                 System.out.println("User registered");
-                return "redirect:/register.html";
+                return "forward:/login.html";
             }
             catch(BadCredentialsException e)
             {
@@ -58,6 +58,8 @@ public class RegisterController
                 // display error message?
                 user.setUsername("");
                 user.setPassword("");
+                // set a message that the username is already taken
+                model.addAttribute("error", true);
                 return "register";
             }
 
