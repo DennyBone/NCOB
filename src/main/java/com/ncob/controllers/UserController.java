@@ -12,7 +12,7 @@ public class UserController
     @GetMapping("/user")
     public String userPage(Model model)
     {
-        //model.addAttribute("user", new User());
+        model.addAttribute("pageTitle", "User Page");
 
         // for now just display the user view
 
