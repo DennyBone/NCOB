@@ -28,9 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     public void configure(WebSecurity web) throws Exception
     {
-        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/content/**", "/webjars/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/webjars/**");
         // "content" is not autoconfigured by spring boot; could rename to 'images' and it would be autoconfigured like 'css' and 'js' are
-        //web.ignoring().antMatchers("/content/**");
+        //web.ignoring().antMatchers("/webjars/**");
     }
 
     // add mongodb config here
@@ -42,9 +42,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
 
         // use the custom userdetailsservice that checks the mongo db
         auth.userDetailsService(userDetailsService);
-
-        //auth.inMemoryAuthentication()
-        //        .withUser("user").password("pass").roles("USER");
     }
 
     @Override
