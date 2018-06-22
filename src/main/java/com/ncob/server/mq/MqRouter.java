@@ -1,4 +1,4 @@
-//package com.webmd.server.mq;
+//package com.ncob.server.mq;
 //
 //import com.ncob.common.mq.MqComponent;
 //import lombok.extern.slf4j.Slf4j;
