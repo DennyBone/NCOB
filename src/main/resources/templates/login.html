@@ -3,8 +3,6 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}" />
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" />-->
-    <!--<script th:src="@{/js/jquery/plugins/jquery.validate.js}" />-->
     <script th:src="@{/webjars/jquery/3.2.1/jquery.min.js}" />
     <script th:src="@{/webjars/jquery-validation/1.17.0/jquery.validate.min.js}" />
     <title>NCOB Login</title>
@@ -12,6 +10,12 @@
 <body>
     <!-- /loginProcessor is the url configured in SecurityConfig to handle form login -->
     <form id="loginForm" th:action="@{/loginProcessor}" th:object="${user}" method='POST'>
+        <p>
+            Go to <a th:href="@{/register}">Registration</a> page
+        </p>
+        <p>
+            Go to <a th:href="@{/home}">Home</a> page
+        </p>
         <div class="imgcontainer">
             <img th:src="@{/content/ncob.jpg}" alt="ncob" class="ncob" />
         </div>

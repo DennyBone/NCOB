@@ -1,6 +1,6 @@
 package com.ncob.controllers;
 
-import com.ncob.mongo.User;
+import com.ncob.mongo.users.User;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;

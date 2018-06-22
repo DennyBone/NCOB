@@ -1,4 +1,4 @@
-package com.ncob.mongo;
+package com.ncob.mongo.users;
 
 import org.springframework.security.authentication.BadCredentialsException;
 

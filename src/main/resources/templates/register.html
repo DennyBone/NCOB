@@ -13,10 +13,12 @@
         <p th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</p>
         <p><input type="submit" value="Submit" /></p>
     </form>
-    <br/>
     <div>
         <p>
-            Go to <a th:href="{@/login}">Login</a> page
+            Go to <a th:href="@{/login}">Login</a> page
+        </p>
+        <p>
+            Go to <a th:href="@{/home}">Home</a> page
         </p>
         <p>
             Forgot password?

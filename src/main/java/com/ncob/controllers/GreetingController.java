@@ -1,4 +1,4 @@
-package com.ncob.hello;
+package com.ncob.controllers;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
