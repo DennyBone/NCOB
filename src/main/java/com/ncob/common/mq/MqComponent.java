@@ -3,6 +3,7 @@ package com.ncob.common.mq;
 import lombok.AccessLevel;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.PropertySource;
 import org.zeromq.ZContext;
 
 import javax.annotation.PostConstruct;
@@ -22,5 +23,9 @@ public abstract class MqComponent implements Runnable {
 
     protected String getAddress() {
         return "tcp://" + host + ":" + port;
+    }
+
+    protected String getInprocAddress() {
+        return "inproc://backend";
     }
 }

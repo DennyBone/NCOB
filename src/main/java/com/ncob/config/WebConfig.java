@@ -1,13 +1,13 @@
 package com.ncob.config;
 
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+//import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @Configuration
-@EnableWebMvc
+//@EnableWebMvc // This disables all the auto configuration that spring boot does for us
 public class WebConfig extends WebMvcConfigurerAdapter
 {
     @Override
@@ -19,8 +19,10 @@ public class WebConfig extends WebMvcConfigurerAdapter
     }
 
     @Override
-    public void addViewControllers(ViewControllerRegistry registry) {
-        //registry.addRedirectViewController("ncob/", "forward:/home.html");
-        registry.addViewController("/").setViewName("redirect:/home.html");
+    public void addViewControllers(ViewControllerRegistry registry)
+    {
+        registry.addRedirectViewController("/", "home.html");
+        //registry.addViewController("/").setViewName("forward:/home.html");
+        //registry.addViewController("/").setViewName("redirect:/home.html");
     }
 }

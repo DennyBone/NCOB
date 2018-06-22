@@ -1,7 +1,7 @@
 package com.ncob.controllers;
 
-import com.ncob.mongo.User;
-import com.ncob.mongo.UserRepositoryImpl;
+import com.ncob.mongo.users.User;
+import com.ncob.mongo.users.UserRepositoryImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;

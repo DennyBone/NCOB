@@ -10,6 +10,12 @@
 <body>
     <!-- /loginProcessor is the url configured in SecurityConfig to handle form login -->
     <form id="loginForm" th:action="@{/loginProcessor}" th:object="${user}" method='POST'>
+        <p>
+            Go to <a th:href="@{/register}">Registration</a> page
+        </p>
+        <p>
+            Go to <a th:href="@{/home}">Home</a> page
+        </p>
         <div class="imgcontainer">
             <img th:src="@{/img/ncob.jpg}" alt="ncob" class="ncob" />
         </div>

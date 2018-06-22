@@ -1,18 +1,8 @@
 package com.ncob.controllers;
 
-import com.ncob.mongo.User;
-import com.ncob.mongo.UserRepositoryImpl;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-
-import javax.validation.Valid;
 
 @Controller
 public class RobotController
@@ -33,6 +23,15 @@ public class RobotController
         // if not, display a message directing user to add a robot
 
         return "robots";
+    }
+
+    // test function that will open a dealer socket to the broker backend over inproc
+    // eventually there will be functions for sending commands down and receiving telemetry from the robot
+    // right now this function isn't hooked up to anything
+    private void connectToBroker()
+    {
+        // create MqWorker(?) class that will provide methods for controllers to connect and talk to the broker
+        // this way controllers can mimic 'workers'
     }
 
     // function to handle add a robot button click

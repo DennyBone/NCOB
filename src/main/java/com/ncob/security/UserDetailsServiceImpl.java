@@ -1,7 +1,7 @@
 package com.ncob.security;
 
-import com.ncob.mongo.User;
-import com.ncob.mongo.UserRepository;
+import com.ncob.mongo.users.User;
+import com.ncob.mongo.users.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;

@@ -1,6 +1,6 @@
 package com.ncob.security;
 
-import com.ncob.mongo.User;
+import com.ncob.mongo.users.User;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 

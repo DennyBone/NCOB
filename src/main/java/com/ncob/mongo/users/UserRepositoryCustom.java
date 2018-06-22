@@ -1,8 +1,8 @@
-package com.ncob.mongo;
+package com.ncob.mongo.users;
 
 import org.springframework.security.authentication.BadCredentialsException;
 
 public interface UserRepositoryCustom
 {
-    public void registerUser(User user) throws BadCredentialsException;
+    void registerUser(User user) throws BadCredentialsException;
 }

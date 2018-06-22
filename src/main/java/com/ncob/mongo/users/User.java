@@ -1,9 +1,11 @@
-package com.ncob.mongo;
+package com.ncob.mongo.users;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
 @Document(collection = "users")
 //@Getter
@@ -19,6 +21,9 @@ public class User
 
     @NotNull
     public String password;
+
+    // a list of references to robot objects the user is subscribed to
+    public List<String> robotIDs = new ArrayList<String>();
 
     public User(){}
 
@@ -43,6 +48,10 @@ public class User
     public void setPassword(String password) {
         this.password = password;
     }
+
+    public List<String> getRobotIDs() { return robotIDs; }
+
+    public void setRobotIDs(List<String> robotIDs) { this.robotIDs = robotIDs; }
 
     @Override
     public String toString()
