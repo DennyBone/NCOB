@@ -5,7 +5,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
 
-@Document(collection = "ncobDB")
+@Document(collection = "users")
 //@Getter
 //@Setter
 //@NoArgsConstructor
