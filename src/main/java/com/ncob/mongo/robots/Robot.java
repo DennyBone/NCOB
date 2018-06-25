@@ -1,8 +1,5 @@
 package com.ncob.mongo.robots;
 
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.ncob.mongo.users.User;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -16,40 +13,40 @@ public class Robot
     @Id
     public String id;
 
-    @NotNull
-    public String userName;
+    // may or may not use
+    private String primaryUser;
 
     @NotNull
-    public String robotName;
-
-    // list of references to subscribed users - may not use
-    public final List<String> userIDs = new ArrayList<String>();
+    private String robotName;
 
     // list of socket names for this robot
-
     // will declaring this final affect mongodb, lombok, etc in any way?
-    // what about removing the getters/setters?
-    public final List<String> socketNames = new ArrayList<String>();
+    private final List<String> socketNames = new ArrayList<String>();
 
-    public Robot(){}
+    // list of references to subscribed users - may not use
+    //public final List<String> userIDs = new ArrayList<String>();
 
-    public Robot(String userName, String robotName)
+    //public Robot(){}
+
+    public Robot(String robotName)
     {
-        this.userName = userName;
         this.robotName = robotName;
     }
 
     public void addSocket(String socketName)
     {
-
+        if(!socketNames.contains(socketName))
+        {
+            socketNames.add(socketName);
+        }
     }
 
-    public String getUserName() {
-        return userName;
+    public String getPrimaryUser() {
+        return primaryUser;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setPrimaryUser(String primaryUser) {
+        this.primaryUser = primaryUser;
     }
 
     public String getRobotName() {
@@ -60,7 +57,4 @@ public class Robot
         this.robotName = robotName;
     }
 
-    public List<String> getUserIDs() {
-        return userIDs;
-    }
 }

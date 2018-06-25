@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface RobotRepository extends MongoRepository<Robot, String>, RobotRepositoryCustom
 {
-    Robot findByUserName(String userName);
+    Robot findByPrimaryUser(String primaryUser);
     Robot findByRobotName(String robotName);
-    Robot findByUserNameAndRobotName(String userName, String robotName);
+    Robot findByPrimaryUserAndRobotName(String primaryUser, String robotName);
 }

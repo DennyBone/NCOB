@@ -14,16 +14,16 @@ import java.util.List;
 public class User
 {
     @Id
-    public String id;
+    private String id;
 
     @NotNull
-    public String username;
+    private String username;
 
     @NotNull
-    public String password;
+    private String password;
 
     // a list of references to robot objects the user is subscribed to
-    public List<String> robotIDs = new ArrayList<String>();
+    private final List<String> robotIDs = new ArrayList<String>();
 
     public User(){}
 
@@ -50,8 +50,6 @@ public class User
     }
 
     public List<String> getRobotIDs() { return robotIDs; }
-
-    public void setRobotIDs(List<String> robotIDs) { this.robotIDs = robotIDs; }
 
     @Override
     public String toString()

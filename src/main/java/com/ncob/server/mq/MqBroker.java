@@ -5,6 +5,7 @@ import com.google.common.collect.HashBiMap;
 import com.ncob.common.mq.MqComponent;
 import com.ncob.mongo.robots.Robot;
 import com.ncob.mongo.robots.RobotRepository;
+import com.ncob.mongo.robots.RobotRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +18,8 @@ import org.zeromq.ZMsg;
 import org.zeromq.ZMQ.Poller;
 
 import javax.validation.constraints.Null;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -30,6 +33,9 @@ public class MqBroker extends MqComponent
     // Maps to relate client/controller names to their socket IDs(invented by router sockets)
     private static final BiMap<String, byte[]> frontendMap = HashBiMap.create();
     private static final BiMap<String, byte[]> backendMap = HashBiMap.create();
+
+    // Map used to retrieve socket router IDs for a given robot and socket
+    private static final HashMap<String, HashMap<String, byte[]>> robotNameToSocketId = new HashMap<>();
 
     private static final String SUCCESS = "0";
     private static final String FAILURE = "-1";
@@ -76,7 +82,7 @@ public class MqBroker extends MqComponent
             if (items.poll() < 0)
                 break;      //  Interrupted
 
-            //  poll backend router socket
+            //  poll backend(controllers) router socket
             if (items.pollin(0))
             {
                 ZMsg msg = ZMsg.recvMsg(backend);
@@ -93,7 +99,6 @@ public class MqBroker extends MqComponent
                     // place new robot in map and add to DB
                     // might need a way to persist the bimaps in case the server fails and the client stays up; or we could just have clients re-register
                     registerRobot(identity, msg , backendMap, backend);
-
 
                     frame.destroy();
                 }
@@ -153,15 +158,15 @@ public class MqBroker extends MqComponent
      */
     private void registerRobot(ZFrame id, ZMsg msg, BiMap<String, byte[]> biMap, Socket socket)
     {
+        // reg msg -> [socket ID(added by router), 'Register', robotName, socketName]
+
         // remove 'register' frame
         msg.pop();
 
-        // retrieve username, robot name and socket name
-        String userName = msg.popString();
+        // retrieve robot name and socket name
         String robotName = msg.popString();
         String socketName = msg.popString();
         log.info("connection ID: {}", id.getData());
-        log.info("username: {}", userName);
         log.info("robot name: {}", robotName);
         log.info("socket name: {}", socketName);
 
@@ -170,25 +175,35 @@ public class MqBroker extends MqComponent
         biMap.put(robotName, id.getData());
 
         // check if robot already exists
-        Robot robot = robotRepository.findByUserNameAndRobotName(userName, robotName);
+        Robot robot = robotRepository.findByRobotName(robotName);
         if(robot != null)
         {
             // if so, just add the new socket
-
+            robot.addSocket(socketName);
+            robotRepository.save(robot);
         }
         else
         {
-            // add a new robot to the DB
-            robot = new Robot(userName, robotName);
+            // if not, add a new robot to the DB
+            robot = new Robot(robotName);
+            robot.addSocket(socketName);
+            robotRepository.persistRobot(robot);
         }
 
-
-        // reg msg -> [socket ID(added by router), 'Register', userName(needs to have an account already), robotName, socketName]
-
-        // retrieve user object from DB to pass to Robot constructor
-        // User user = userRepository.findByUsername();
-
-        // add robot to DB
+        // Check if the robot is already in the in-memory map(Being in the DB doesn't mean it's in the in-memory map)
+        if(robotNameToSocketId.containsKey(robotName))
+        {
+            // add new socket to in-memory map
+            robotNameToSocketId.get(robotName).put(socketName, id.getData());
+        }
+        else
+        {
+            // add robot/socket to in-memory map for later use
+            HashMap<String, byte[]> tempMap = new HashMap<>();
+            tempMap.put(socketName, id.getData());
+            robotNameToSocketId.put(robotName, tempMap);
+            tempMap = null;
+        }
 
         // reply that the registration was successful
         ZMsg reply = new ZMsg();

@@ -41,7 +41,6 @@ public class DmoDealerClient extends MqComponent
 
         ZMsg registrationMsg = new ZMsg();
         registrationMsg.add("Register");
-        registrationMsg.add("dennybone");
         registrationMsg.add("NCOBot");
         registrationMsg.add("socket_0");
         registrationMsg.send(dealerSocket);
