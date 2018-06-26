@@ -5,7 +5,6 @@ import com.google.common.collect.HashBiMap;
 import com.ncob.common.mq.MqComponent;
 import com.ncob.mongo.robots.Robot;
 import com.ncob.mongo.robots.RobotRepository;
-import com.ncob.mongo.robots.RobotRepositoryImpl;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,9 +16,7 @@ import org.zeromq.ZMQ.Socket;
 import org.zeromq.ZMsg;
 import org.zeromq.ZMQ.Poller;
 
-import javax.validation.constraints.Null;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 
 /**
@@ -68,21 +65,24 @@ public class MqBroker extends MqComponent
         backend = context.createSocket(ZMQ.ROUTER);
         backend.setRouterMandatory(true); //"when you provide an unroutable identity on a send call, the socket will signal an EHOSTUNREACH error"
         backend.bind(backendAddress);
+        log.info("Broker has started");
 
+        /* Read more about 0mq polling. Need to make sure i'm not dropping any messages.
+        *  Right now i'm just reading one message off the socket - what happens if there are more? etc, etc
+        * */
         while (!Thread.currentThread().isInterrupted())
         {
-            //  Initialize poll set
+            // Initialize poll set
             Poller items = context.createPoller(2);
-            //  Always poll for worker activity on backend
+            // Always poll for worker activity on backend
             items.register(backend, Poller.POLLIN);
             // Always poll for client activity on frontend
             items.register(frontend, Poller.POLLIN);
-            log.info("Broker has started");
 
             if (items.poll() < 0)
                 break;      //  Interrupted
 
-            //  poll backend(controllers) router socket
+            // poll backend(controllers) router socket
             if (items.pollin(0))
             {
                 ZMsg msg = ZMsg.recvMsg(backend);
@@ -93,25 +93,47 @@ public class MqBroker extends MqComponent
                 ZFrame identity = msg.unwrap(); // retrieves and removes the ID and null frame (if exists) from the msg
                 ZFrame frame = msg.getFirst();
 
-                // check if it's a registration message, otherwise forward to correct client
+                // check if it's a registration message
                 if(frame.toString().equals("Register"))
                 {
-                    // place new robot in map and add to DB
                     // might need a way to persist the bimaps in case the server fails and the client stays up; or we could just have clients re-register
-                    registerRobot(identity, msg , backendMap, backend);
+                    registerRobot(identity, msg , backendMap, backend); // place new robot in map and add to DB
+                }
+                else if(frame.toString().equals("GetID"))
+                {
+                    msg.pop(); // remove 'GetID' frame
 
-                    frame.destroy();
+                    // retrieve robot name and socket name
+                    String robotName = msg.popString();
+                    String socketName = msg.popString();
+
+                    // reply with corresponding socket ID
+                    ZMsg reply = new ZMsg();
+                    reply.add(identity);
+                    reply.add(getSocketId(robotName, socketName));
+                    reply.send(backend);
+                    reply.destroy();
                 }
                 else
                 {
-                    lookupAndForwardMsg(backendMap, frontendMap, msg, identity, frontend);
+                    // Removing for now; Deciding to place routing ID in msg rather than do a lookup every time
+                    //lookupAndForwardMsg(backendMap, frontendMap, msg, identity, frontend);
 
                     // BROKER WILL SHUTTLE REPLIES W/O USING A LOOKUP TABLE. THIS MEANS WHEN A REQ IS RECEIVED, THE ADDRESS OF THE SENDER NEEDS TO BE SAVED AND ADDED TO ALL SUBSEQUENT REPLIES
                     // SO THE ROUTER SOCKETS CAN DIRECT IT TO THE PROPER PLACE. ROBOT REQUESTS TBD - HOW WILL A ROBOT(OR THE BROKER) KNOW WHERE THE ROBOT'S REQ NEEDS TO GO? CONTROLLERS(BROWSER)
                     // CAN SELECT FROM A LIST OF REGISTERED ROBOTS/SOCKETS TO DETERMINE WHERE TO SEND THE REQ.
 
-
+                    // go from [clientID, msg] to [clientID, returnID, msg]
+                    msg.pop(); // remove 'frame'(client ID in this case) from msg
+                    msg.addFirst(identity); // identity is the returnID(controller ID) in this case
+                    msg.addFirst(frame); // frame holds the client ID we want to talk to in this case
+                    msg.send(frontend); // pass msg on to correct client with return id included
                 }
+
+                // clean up
+                msg.destroy();
+                frame.destroy();
+                identity.destroy();
             }
 
             // poll Frontend router socket
@@ -135,8 +157,15 @@ public class MqBroker extends MqComponent
                 }
                 else
                 {
-                    lookupAndForwardMsg(frontendMap, backendMap, msg, identity, backend);
+                    //lookupAndForwardMsg(frontendMap, backendMap, msg, identity, backend);
+
+                    msg.send(backend);
                 }
+
+                // clean up
+                msg.destroy();
+                frame.destroy();
+                identity.destroy();
             }
         }
 
@@ -144,6 +173,12 @@ public class MqBroker extends MqComponent
         frontend.close();
         backend.close();
         context.destroy();
+    }
+
+    private byte[] getSocketId(String robotName, String socketName)
+    {
+        // add logic to catch null pointers(robot/socket not in the map)
+        return robotNameToSocketId.get(robotName).get(socketName);
     }
 
     /**
@@ -210,10 +245,7 @@ public class MqBroker extends MqComponent
         reply.add(id);
         reply.add(SUCCESS);
         reply.send(socket);
-
         reply.destroy();
-        id.destroy();
-        msg.destroy();
     }
 
     /**

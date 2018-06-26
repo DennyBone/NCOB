@@ -18,7 +18,8 @@ import java.util.Random;
 public class DmoDealerWorker extends MqComponent
 {
     private ZMQ.Socket dealerSocket;
-    private static Random rand = new Random(System.nanoTime());
+
+    private ZFrame clientSocketId;
 
     @Autowired
     public DmoDealerWorker(@Value("${mq.broker.backend.host}") String host, @Value("${mq.broker.backend.port}") String port, ExecutorService executor, ZContext context)
@@ -39,38 +40,36 @@ public class DmoDealerWorker extends MqComponent
         dealerSocket.connect(backendAddress);
         log.info("Dealer Worker connected to : " + backendAddress);
 
-        ZMsg registrationMsg = new ZMsg();
-        registrationMsg.add("Register");
-        registrationMsg.add("NCOBot");
-        registrationMsg.send(dealerSocket);
-        String reply = dealerSocket.recvStr();
-        log.info("Controller received reply: " + reply);
+        // allow time for client to register
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
-        // later on, wrap registration process in a method; return 0 for success(in C client)
-        if(reply.equals("0"))
+        // Ask the broker for the robot/client socket ID; later on, the robot and socket will be selected from a dropdown on the UI
+        ZMsg getIdMsg = new ZMsg();
+        getIdMsg.add("GetID");
+        getIdMsg.add("NCOBot");
+        getIdMsg.add("socket_0");
+        getIdMsg.send(dealerSocket);
+        clientSocketId = ZFrame.recvFrame(dealerSocket);
+        log.info("Controller received reply: " + clientSocketId);
+
+        // Use the given ID to communicate with the desired robot/socket combo
+        ZMsg testMsg = new ZMsg();
+        testMsg.add(clientSocketId);
+        testMsg.add("Video");
+        testMsg.send(dealerSocket, true); // for example, request video data from socket_0 on NCOBot
+
+        // continuously read replies
+        while (!Thread.currentThread().isInterrupted())
         {
-            // registration was successful
-            registrationMsg.destroy();
-
             ZMsg msg = ZMsg.recvMsg(dealerSocket);
             log.info("controller received msg: {}", msg);
             msg.destroy();
-
-            byte[] first = {1, 2, 3};
-            byte[] second = {4, 5, 6};
-            ZMsg testMsg = new ZMsg();
-            testMsg.add("Video");
-            testMsg.add(first);
-            testMsg.add(second);
-            testMsg.send(dealerSocket, true);
-
-        }
-        else
-        {
-            //reg. failed, retry
         }
 
         dealerSocket.close();
-        //context.destroy();
     }
 }

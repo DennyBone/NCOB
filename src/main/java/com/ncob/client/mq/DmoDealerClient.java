@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
-import org.zeromq.ZContext;
-import org.zeromq.ZMQ;
-import org.zeromq.ZMsg;
-import org.zeromq.ZPoller;
+import org.zeromq.*;
 
 import java.util.concurrent.ExecutorService;
 
@@ -43,7 +40,7 @@ public class DmoDealerClient extends MqComponent
         registrationMsg.add("Register");
         registrationMsg.add("NCOBot");
         registrationMsg.add("socket_0");
-        registrationMsg.send(dealerSocket);
+        registrationMsg.send(dealerSocket, false);
         String reply = dealerSocket.recvStr();
         log.info("Client received reply: " + reply);
 
@@ -53,23 +50,33 @@ public class DmoDealerClient extends MqComponent
             // registration was successful
             registrationMsg.destroy();
 
+            // wait for request from server/controller
+            ZMsg msg = ZMsg.recvMsg(dealerSocket);
+            log.info("client received msg: {}", msg);
+
+            ZFrame controllerId = msg.unwrap(); // return ID - save for later
+
             // send a bunch of data
             byte[] first = {1, 2, 3};
             byte[] second = {4, 5, 6};
-            ZMsg testMsg = new ZMsg();
-            testMsg.add("Video");
-            testMsg.add(first);
-            testMsg.add(second);
-            testMsg.send(dealerSocket, true);
 
-            ZMsg msg = ZMsg.recvMsg(dealerSocket);
-            log.info("client received msg: {}", msg);
+            if(msg.popString().equals("Video"))
+            {
+                msg.add(first);
+                msg.add(second);
+                msg.addFirst(controllerId);
+                for(int i = 0; i < 10; i++)
+                {
+                    msg.send(dealerSocket, false);
+                }
+            }
+
             msg.destroy();
-
         }
         else
         {
             //reg. failed, retry
+            registrationMsg.send(dealerSocket, true); // destroy msg after sending
         }
 
         dealerSocket.close();

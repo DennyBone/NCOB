@@ -32,6 +32,7 @@
 
     <!--example of how to configure a logger for a specific package-->
     <logger name="com.ncob.server" level="INFO"/>
+    <logger name="com.ncob.client" level="INFO"/>
 
     <!--
     <logger name="com.ncob.security" level="INFO"/>
