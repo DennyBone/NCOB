@@ -1,13 +1,17 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
+<head th:include="header :: commonInclude">
     <title>My Robots</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 </head>
-<body>
+    <body>
 
-    Needs an 'add a robot' button
+        <div th:replace="header :: header" />
+        <br/>
+        <br/>
+        <br/>
+        Needs an 'add a robot' button
 
 
-</body>
+    </body>
 </html>

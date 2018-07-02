@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-	<head th:include="/header :: commonInclude">
+	<head th:include="header :: commonInclude">
 	  <title>NCOB Home</title>
 	  <!-- <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}" /> -->
 	  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	</head>
 	<body>
 
-        <div th:replace="/header :: header" />
+        <div th:replace="header :: header" />
 
         <div class="container">
             <div class="nav">
