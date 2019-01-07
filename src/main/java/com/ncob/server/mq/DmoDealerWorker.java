@@ -11,9 +11,8 @@ import org.zeromq.ZMQ;
 import org.zeromq.ZMsg;
 
 import java.util.concurrent.ExecutorService;
-import java.util.Random;
 
-@Component
+//@Component
 @Slf4j
 public class DmoDealerWorker extends MqComponent
 {
@@ -42,7 +41,7 @@ public class DmoDealerWorker extends MqComponent
 
         // allow time for client to register
         try {
-            Thread.sleep(1000);
+            Thread.sleep(20000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

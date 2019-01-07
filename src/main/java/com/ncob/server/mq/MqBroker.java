@@ -56,6 +56,9 @@ public class MqBroker extends MqComponent
         final String frontendAddress = getAddress(); // "tcp://*:61615"
         final String backendAddress = getInprocAddress(); //"inproc://backend"
 
+        log.info(frontendAddress);
+        log.info(backendAddress);
+
         //  Socket facing clients
         frontend = context.createSocket(ZMQ.ROUTER);
         frontend.setRouterMandatory(true); //let us know if connection id does not exist
@@ -158,7 +161,6 @@ public class MqBroker extends MqComponent
                 else
                 {
                     //lookupAndForwardMsg(frontendMap, backendMap, msg, identity, backend);
-
                     msg.send(backend);
                 }
 

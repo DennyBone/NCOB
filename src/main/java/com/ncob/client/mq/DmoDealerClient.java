@@ -10,7 +10,7 @@ import org.zeromq.*;
 
 import java.util.concurrent.ExecutorService;
 
-@Component
+//@Component
 @Slf4j
 public class DmoDealerClient extends MqComponent
 {
