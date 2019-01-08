@@ -47,7 +47,7 @@ public class RegisterController
 
                 // success
                 System.out.println("User registered");
-                return "forward:/login.html";
+                return "redirect:/login";
             }
             catch(BadCredentialsException e)
             {

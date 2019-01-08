@@ -14,17 +14,28 @@ public class UserRepositoryImpl implements UserRepositoryCustom
     @Autowired
     private UserRepository userRepository;
 
+    public void addUserRobot(String userName, String robotName)
+    {
+        User user = userRepository.findByUsername(userName);
+        if(!user.getUserRobots().contains(robotName))
+        {
+            //add robot to user object
+            user.getUserRobots().add(robotName);
+            userRepository.save(user);
+        }
+    }
+
     public void registerUser(User user) throws BadCredentialsException
     {
-        // check if controllers already exists
+        // check if user already exists
         if(userRepository.findByUsername(user.getUsername()) != null)
         {
-            // controllers already exists, return error
+            // user already exists, return error
             throw new BadCredentialsException(user.getUsername() + "already exists");
         }
         else
         {
-            // email not found, register a new controllers
+            // user not found, register a new user
             try
             {
                 userRepository.insert(user);

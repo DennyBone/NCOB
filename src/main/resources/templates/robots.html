@@ -11,7 +11,31 @@
         <br/>
         <br/>
         Needs an 'add a robot' button
+        <br/>
+        <br/>
+        <br/>
 
+        <div th:if="${not #lists.isEmpty(robotList)}">
+            <h2>Robot List</h2>
+            <table>
+                <tr>
+                    <th>Robot Name</th>
+                </tr>
+                <tr th:each="robot : ${robotList}">
+                    <td th:text="${robot}"></td>
+                </tr>
+            </table>
+        </div>
+
+        <h1>Form</h1>
+        <form action="#" th:action="@{/registerRobot}" th:object="${robot}" method="post">
+            <p>Robot Name: <input type="text" th:field="*{robotName}" th:required="required" /></p>
+            <p th:if="${#fields.hasErrors('robotName')}" th:errors="*{robotName}">Name Error</p>
+            <p th:if="${error}" th:style="${'color: red;'}"> Robot name already taken </p>
+            <p th:if="${success}" th:style="${'color: green;'}"> Success! </p>
+
+            <p><input type="submit" value="Submit" /></p>
+        </form>
 
     </body>
 </html>

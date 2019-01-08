@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,10 +14,10 @@ public class Robot
     @Id
     public String id;
 
-    // may or may not use
     private String primaryUser;
 
     @NotNull
+    @Size(min=1)
     private String robotName;
 
     // list of socket names for this robot
@@ -26,7 +27,7 @@ public class Robot
     // list of references to subscribed users - may not use
     //public final List<String> userIDs = new ArrayList<String>();
 
-    //public Robot(){}
+    public Robot(){}
 
     public Robot(String robotName)
     {

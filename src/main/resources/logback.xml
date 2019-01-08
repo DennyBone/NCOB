@@ -25,7 +25,7 @@
     <!--example of how to configure logger for specific class-->
     <!--additivity default is true when disabled the log event will not be passed up the logging hierarchy,
     when set to false the logger will only log to appenders listed inside the logger definition-->
-    <logger name="com.ncob.server.mq.MqRepSocket" level="DEBUG" additivity="true">
+    <logger name="com.ncob.Application" level="DEBUG" additivity="true">
         <!--appenders can be added to loggers like comment bellow-->
         <!--<appender-ref ref="OTHER_APPENDER"/>-->
     </logger>
@@ -33,11 +33,11 @@
     <!--example of how to configure a logger for a specific package-->
     <logger name="com.ncob.server" level="INFO"/>
     <logger name="com.ncob.client" level="INFO"/>
+    <logger name="com.ncob.controllers" level="INFO"/>
 
     <!--
     <logger name="com.ncob.security" level="INFO"/>
     <logger name="com.ncob.mongo" level="INFO"/>
-    <logger name="com.ncob.controllers" level="INFO"/>
     <logger name="com.ncob.config" level="INFO"/>
     -->
 

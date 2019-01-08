@@ -23,7 +23,7 @@ public class User
     private String password;
 
     // a list of references to robot objects the user is subscribed to
-    private final List<String> robotIDs = new ArrayList<String>();
+    private List<String> userRobots = new ArrayList<String>();
 
     public User(){}
 
@@ -49,13 +49,13 @@ public class User
         this.password = password;
     }
 
-    public List<String> getRobotIDs() { return robotIDs; }
+    public List<String> getUserRobots() { return userRobots; }
 
     @Override
     public String toString()
     {
         return String.format(
-                "Customer[id=%s, username='%s']",
+                "User[id=%s, username='%s']",
                 id, username);
     }
 }
