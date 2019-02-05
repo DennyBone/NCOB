@@ -28,9 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter
     @Override
     public void configure(WebSecurity web) throws Exception
     {
-        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**", "/webjars/**");
-        // "content" is not autoconfigured by spring boot; could rename to 'images' and it would be autoconfigured like 'css' and 'js' are
-        //web.ignoring().antMatchers("/webjars/**");
+        web.ignoring().antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/img/**",
+                "/webjars/**", "/sb-dashboard/**", "/scss/**");
     }
 
     // add mongodb config here
